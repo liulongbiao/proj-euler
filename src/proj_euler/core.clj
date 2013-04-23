@@ -1,6 +1,7 @@
 (ns proj-euler.core
   (:require [clojure.math.numeric-tower :refer [lcm]]
-            [clojure.math.combinatorics :refer [permutations]]))
+            [clojure.math.combinatorics :refer [permutations combinations]]
+            [clojure.pprint :refer [pprint]]))
 
 (defn factor-of?
   [n f]
@@ -133,7 +134,19 @@
               (every? zero? (map - coll (iterate inc f)))))]
     (first (filter consecutive? (partition n 1 (filter interest? (iterate inc 1)))))))
 
+(defn mid-prime-permutation [n]
+  (let [prime-permutations (->> n
+                             digits-of
+                             permutations
+                             (remove #(zero? (first %)))
+                             (map #(Integer/parseInt (apply str %)))
+                             (filter prime?))]
+    (if (> (count prime-permutations) 2)
+      (let [pair (filter #(= (reduce + %) (* 2 n))
+                   (combinations prime-permutations 2))]
+        (if (seq pair) (sort (cons n (first pair))))))))
+
 (defn p049
   "Prime permutations"
   []
-  (let [ps (filter (range 1000 9000))]))
+  (filter #(seq %) (map mid-prime-permutation (filter prime? (range 1000 9000)))))

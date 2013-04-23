@@ -149,3 +149,13 @@
   "Prime permutations"
   []
   (filter #(seq %) (map mid-prime-permutation (filter prime? (range 1000 9000)))))
+
+(defn p050 []
+  (let [max-count (count (take-while #(< % 1000000) (reductions + (primes))))
+        ps (take max-count (primes))
+        consecutive-primes-sum (for [i (range max-count 0 -1)
+                                     p (partition i 1 ps)
+                                     :let [n (reduce + p)]
+                                     :when (prime? n)]
+                                  [n i])]
+    (first consecutive-primes-sum)))

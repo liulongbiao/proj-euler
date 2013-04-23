@@ -152,6 +152,12 @@
 (defn p019 [y1 y2]
   (- (sundays-from-1900 y2) (sundays-from-1900 y1)))
 
+(defn factorial [n] (reduce * (range 1N (inc n))))
+
+(defn p020
+  ([] (p020 100))
+  ([n] (reduce + (digits-of (factorial n)))))
+
 (defn p047 [n]
   (letfn [(interest? [num] (= n (count (prime-factors-of num))))
           (satisfied? [coll] (every? interest? coll))]

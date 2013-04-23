@@ -130,8 +130,7 @@
 (defn p047-2 [n]
   (letfn [(interest? [num] (= n (count (prime-factors-of num))))
           (consecutive? [coll]
-            (let [f (first coll)]
-              (every? zero? (map - coll (iterate inc f)))))]
+            (every? (partial = -1) (map #(apply - %) (partition 2 1 coll))))]
     (first (filter consecutive? (partition n 1 (filter interest? (iterate inc 1)))))))
 
 (defn mid-prime-permutation [n]

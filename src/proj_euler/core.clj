@@ -150,8 +150,8 @@
   []
   (filter #(seq %) (map mid-prime-permutation (filter prime? (range 1000 9000)))))
 
-(defn p050 []
-  (let [max-count (count (take-while #(< % 1000000) (reductions + (primes))))
+(defn p050 [num]
+  (let [max-count (count (take-while #(< % num) (reductions + (primes))))
         ps (take max-count (primes))
         consecutive-primes-sum (for [i (range max-count 0 -1)
                                      p (partition i 1 ps)

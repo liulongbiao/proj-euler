@@ -2,6 +2,7 @@
   (:require [clojure.math.numeric-tower :refer [lcm expt]]
             [clojure.math.combinatorics :refer [permutations combinations]]
             [clojure.string :refer [trim split-lines]]
+            [clojure.java.io :refer [reader resource]]
             [clojure.pprint :refer [pprint]]))
 
 (defn factor-of?
@@ -107,7 +108,7 @@
 (defn p016 [num]
   (reduce + (digits-of (expt 2 num))))
 
-(defn roll-trangle [a b]
+(defn roll-triangle [a b]
   (vec (for [i (range (count b))]
     (+ (b i) (max (a i) (a (inc i)))))))
 
@@ -131,8 +132,8 @@
           triangle (for [row (split-lines txt)]
                      (vec (map #(Integer. %) (.split (trim row) " "))))]
       (p018 triangle)))
-  ([trangle]
-    (reduce roll-trangle (reverse trangle))))
+  ([triangle]
+    (reduce roll-triangle (reverse triangle))))
 
 (defn divide-by?
   [f n]
@@ -196,3 +197,9 @@
                                      :when (prime? n)]
                                   [n i])]
     (first consecutive-primes-sum)))
+
+(defn p067 []
+  (with-open [rdr (reader (resource "proj_euler/triangle.txt"))]
+    (let [triangle (for [row (line-seq rdr)]
+                     (vec (map #(Integer. %) (.split (trim row) " "))))]
+      (p018 triangle))))

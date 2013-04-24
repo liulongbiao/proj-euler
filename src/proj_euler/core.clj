@@ -1,6 +1,6 @@
 (ns proj-euler.core
   (:require [clojure.math.numeric-tower :refer [lcm expt]]
-            [clojure.math.combinatorics :refer [permutations combinations]]
+            [clojure.math.combinatorics :refer [permutations combinations selections]]
             [clojure.string :refer [trim split-lines]]
             [clojure.java.io :refer [reader resource]]
             [clojure.pprint :refer [pprint]]))
@@ -9,9 +9,11 @@
   [n f]
   (zero? (mod n f)))
 
+(defn sum [coll] (reduce + coll))
+
 (defn p001
   ([] (p001 1000))
-  ([n] (reduce + (filter #(or (factor-of? % 3) (factor-of? % 5)) (range 1 n)))))
+  ([n] (sum (filter #(or (factor-of? % 3) (factor-of? % 5)) (range 1 n)))))
 
 (defn fib
   ([] (fib 0 1))
@@ -19,7 +21,7 @@
 
 (defn p002
   []
-  (reduce + (filter even? (take-while (partial > 4000000) (fib)))))
+  (sum (filter even? (take-while (partial > 4000000) (fib)))))
 
 (defn prime?
   [n]
@@ -27,10 +29,11 @@
     (not-any? (partial factor-of? n) (range 2 (inc (Math/sqrt n))))
     (= n 2)))
 
-(defn factors-of [num]
-  (let [lows (filter (partial factor-of? num) (range 2 (inc (Math/sqrt num))))
-        highs (map (partial / num) lows)]
-    (distinct (concat lows highs))))
+(defn factors-of [n]
+  (if (> n 2)
+    (let [lows (filter (partial factor-of? n) (range 2 (inc (Math/sqrt n))))
+          highs (map (partial / n) lows)]
+      (distinct (concat lows highs)))))
 
 (defn prime-factors-of
   [num]
@@ -58,8 +61,8 @@
 (defn p006
   [n]
   (let [rg (range 1 (inc n))]
-    (- (square (reduce + rg))
-      (reduce + (map square rg)))))
+    (- (square (sum rg))
+      (sum (map square rg)))))
 
 (defn primes [] (filter prime? (iterate inc 2)))
 
@@ -92,7 +95,7 @@
         (* x y z)))))
 
 (defn p010 [num]
-  (reduce + (take-while #(< % num) (primes))))
+  (sum (take-while #(< % num) (primes))))
 
 ;; below code use the screen method, to find primes below an integer
 ;; it works for small num ,but get StackOverflowError
@@ -105,10 +108,10 @@
 (defn primes-below [n] (screen-primes (range 2 n)))
 
 (defn p010-1 [num]
-  (reduce + (primes-below num)))
+  (sum (primes-below num)))
 
 (defn p016 [num]
-  (reduce + (digits-of (expt 2 num))))
+  (sum (digits-of (expt 2 num))))
 
 (defn roll-triangle [a b]
   (vec (for [i (range (count b))]
@@ -149,7 +152,7 @@
 
 (defn sundays-from-1900
   [year]
-  (quot (reduce + (map #(if (leap-year? %) 366 365) (range 1900 year))) 7))
+  (quot (sum (map #(if (leap-year? %) 366 365) (range 1900 year))) 7))
 
 ;; Current not right.
 (defn p019 [y1 y2]
@@ -159,17 +162,29 @@
 
 (defn p020
   ([] (p020 100))
-  ([n] (reduce + (digits-of (factorial n)))))
+  ([n] (sum (digits-of (factorial n)))))
 
-(defn proper-divisors [n] (conj (factors-of n) 1))
+(defn proper-divisors [n]
+  (if (> n 1)
+    (conj (factors-of n) 1)))
 (defn amicable? [n]
-  (let [pdsum (fn [i] (reduce + (proper-divisors i)))
-        pair (pdsum n)]
+  (let [pair (sum (proper-divisors n))]
     (if (not= n pair)
-      (= n (pdsum pair)))))
+      (= n (sum (proper-divisors pair))))))
 (defn p021
   ([] (p021 10000))
-  ([n] (reduce + (filter amicable? (range n)))))
+  ([n] (sum (filter amicable? (range n)))))
+
+(defn perfect? [n] (= (sum (proper-divisors n)) n))
+(defn deficient? [n] (< (sum (proper-divisors n)) n))
+(defn abundant? [n] (> (sum (proper-divisors n)) n))
+
+(defn p023
+  []
+  (let [abundants (apply sorted-set (filter abundant? (range 1 28134)))
+        sum-of-abundants? (fn [n] (some #(abundants (- n %))
+                                        (take-while #(< % n) abundants)))]
+    (sum (remove sum-of-abundants? (range 1 28134)))))
 
 (defn rotates
   [ds]
@@ -202,7 +217,7 @@
 
 (defn p037
   []
-  (reduce + (take 11 (filter truncatable-prime? (primes)))))
+  (sum (take 11 (filter truncatable-prime? (primes)))))
 
 (defn p041
   []

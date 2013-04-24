@@ -7,61 +7,6 @@
             [clojure.java.io :refer [reader resource]]
             [clojure.pprint :refer [pprint]]))
 
-(defn proper-divisors [n]
-  (if (> n 1)
-    (conj (factors-of n) 1)))
-(defn amicable? [n]
-  (let [pair (sum (proper-divisors n))]
-    (if (not= n pair)
-      (= n (sum (proper-divisors pair))))))
-(defn p021
-  ([] (p021 10000))
-  ([n] (sum (filter amicable? (range n)))))
-
-(defn perfect? [n] (= (sum (proper-divisors n)) n))
-(defn deficient? [n] (< (sum (proper-divisors n)) n))
-(defn abundant? [n] (> (sum (proper-divisors n)) n))
-
-(defn p023
-  []
-  (let [abundants (apply sorted-set (filter abundant? (range 1 28134)))
-        sum-of-abundants? (fn [n] (some #(abundants (- n %))
-                                        (take-while #(< % n) abundants)))]
-    (sum (remove sum-of-abundants? (range 1 28134)))))
-
-(defn rotates
-  [ds]
-  (let [c (count ds)]
-    (take c (partition c 1 (cycle ds)))))
-
-(defn circular-prime?
-  [n]
-  (->> n
-    digits-of
-    rotates
-    (map digits->int)
-    (every? prime?)))
-
-(defn p035
-  ([] (p035 1000000))
-  ([n]
-    (count (filter circular-prime? (take-while #(< % n) (primes))))))
-
-(defn truncatable-prime?
-  [n]
-  (if (prime? n)
-    (let [ds (vec (digits-of n))
-          ct (count ds)]
-      (if (> ct 1)
-        (->> (range 1 ct)
-          (mapcat #(vector (take % ds) (take-last % ds)) )
-          (map digits->int)
-          (every? prime?))))))
-
-(defn p037
-  []
-  (sum (take 11 (filter truncatable-prime? (primes)))))
-
 (defn p041
   []
   (->> (range 9 0 -1)

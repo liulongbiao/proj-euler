@@ -194,6 +194,15 @@
   []
   (reduce + (take 11 (filter truncatable-prime? (primes)))))
 
+(defn p041
+  []
+  (->> (range 9 0 -1)
+    (mapcat #(permutations (range 1 (inc %))))
+    (map digits->int)
+    (sort >)
+    (filter prime?)
+    first))
+
 (defn p047 [n]
   (letfn [(interest? [num] (= n (count (prime-factors-of num))))
           (satisfied? [coll] (every? interest? coll))]

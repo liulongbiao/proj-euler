@@ -47,3 +47,28 @@
   [ds] (Integer/parseInt (apply str ds)))
 
 (defn factorial [n] (reduce * (range 1N (inc n))))
+
+(defn proper-divisors
+  "numbers less than n which divide evenly into n"
+  [n]
+  (if (> n 1) (conj (factors-of n) 1)))
+
+(defn amicable?
+  "Let d(n) be defined as the sum of proper divisors of n.
+
+  If d(a) = b and d(b) = a, where a not= b,
+  then a and b are an amicable pair and each of a and b are called amicable numbers."
+  [n]
+  (let [pair (sum (proper-divisors n))]
+    (if (not= n pair)
+      (= n (sum (proper-divisors pair))))))
+
+(defn perfect?
+  "A number n is called perfect if the sum of its proper divisors is exactly equal to itself."
+  [n] (= (sum (proper-divisors n)) n))
+(defn deficient?
+  "A number n is called deficient if the sum of its proper divisors is less than n"
+  [n] (< (sum (proper-divisors n)) n))
+(defn abundant?
+  "A number n is called abundant if the sum of its proper divisors exceeds n"
+  [n] (> (sum (proper-divisors n)) n))

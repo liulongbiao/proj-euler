@@ -2,13 +2,9 @@
   (:use clojure.test
         proj-euler.core))
 
-(deftest p001-test
-  (testing "test p001."
-    (is (= 23 (p001 10)))))
-
 (deftest p018-test
   (testing "test p018."
-    (is (= 23 (p018 [[3]
+    (is (= [23] (p018 [[3]
                      [7 4]
                      [2 4 6]
                      [8 5 9 3]])))))

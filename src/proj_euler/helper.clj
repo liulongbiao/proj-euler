@@ -2,7 +2,7 @@
   (:require [clojure.math.numeric-tower :refer [lcm expt]]
             [clojure.math.combinatorics :refer [permutations combinations selections]]))
 
-(defn devide-by?
+(defn divide-by?
   "whether integer n is divide by f."
   [f n]
   (zero? (mod n f)))
@@ -15,7 +15,7 @@
   when n <= 2, then whether n is prime is up to whether n = 2."
   [n]
   (if (> n 2)
-    (not-any? #(devide-by? % n) (range 2 (inc (Math/sqrt n))))
+    (not-any? #(divide-by? % n) (range 2 (inc (Math/sqrt n))))
     (= n 2)))
 
 (defn factors-of
@@ -24,7 +24,7 @@
   when n <= 2, then it is nil."
   [n]
   (if (> n 2)
-    (let [lows (filter #(devide-by? % n) (range 2 (inc (Math/sqrt n))))
+    (let [lows (filter #(divide-by? % n) (range 2 (inc (Math/sqrt n))))
           highs (map (partial / n) lows)]
       (distinct (concat lows highs)))))
 
@@ -45,3 +45,5 @@
 (defn digits->int
   "concat a sequence of digits to constract an integer."
   [ds] (Integer/parseInt (apply str ds)))
+
+(defn factorial [n] (reduce * (range 1N (inc n))))

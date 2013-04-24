@@ -1,11 +1,11 @@
 (ns proj-euler.problems.prob-001-010
   (:require [clojure.math.numeric-tower :refer [lcm]]
-            [proj-euler.helper :refer [sum devide-by? fibonacci prime? factors-of
+            [proj-euler.helper :refer [sum divide-by? fibonacci prime? factors-of
                                        primes digits-of]]))
 
 (defn p001
   ([] (p001 1000))
-  ([n] (sum (filter #(or (devide-by? 3 %) (devide-by? 5 %)) (range 1 n)))))
+  ([n] (sum (filter #(or (divide-by? 3 %) (divide-by? 5 %)) (range 1 n)))))
 
 (defn p002
   ([] (p002 4000000))
@@ -68,7 +68,7 @@
   [lefts]
   (if (seq lefts)
     (let [p (first lefts)]
-      (cons p (screen-primes (remove #(factor-of? % p) (rest lefts)))))))
+      (cons p (screen-primes (remove #(divide-by? p %) (rest lefts)))))))
 
 (defn primes-below [n] (screen-primes (range 2 n)))
 

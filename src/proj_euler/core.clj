@@ -23,8 +23,9 @@
 
 (defn prime?
   [n]
-  (or (= n 2)
-    (not-any? (partial factor-of? n) (range 2 (inc (Math/sqrt n))))))
+  (if (> n 2)
+    (not-any? (partial factor-of? n) (range 2 (inc (Math/sqrt n))))
+    (= n 2)))
 
 (defn factors-of [num]
   (let [lows (filter (partial factor-of? num) (range 2 (inc (Math/sqrt num))))
@@ -177,6 +178,21 @@
   ([] (p035 1000000))
   ([n]
     (count (filter circular-prime? (take-while #(< % n) (primes))))))
+
+(defn truncatable-prime?
+  [n]
+  (if (prime? n)
+    (let [ds (vec (digits-of n))
+          ct (count ds)]
+      (if (> ct 1)
+        (->> (range 1 ct)
+          (mapcat #(vector (take % ds) (take-last % ds)) )
+          (map digits->int)
+          (every? prime?))))))
+
+(defn p037
+  []
+  (reduce + (take 11 (filter truncatable-prime? (primes)))))
 
 (defn p047 [n]
   (letfn [(interest? [num] (= n (count (prime-factors-of num))))

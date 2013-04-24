@@ -1,7 +1,7 @@
 (ns proj-euler.problems.prob-001-010
   (:require [clojure.math.numeric-tower :refer [lcm]]
             [proj-euler.helper :refer [sum divide-by? fibonacci prime? factors-of
-                                       primes digits-of]]))
+                                       primes digits-of palindrome?]]))
 
 (defn p001
   ([] (p001 1000))
@@ -15,10 +15,6 @@
   "find the largest prime factor"
   ([] (p003 600851475143))
   ([n] (apply max (filter prime? (factors-of n)))))
-
-(defn palindrome? [n]
-  (let [s (seq (str n))]
-    (= s (reverse s))))
 
 (defn p004 []
   (apply max (filter palindrome? (for [x (range 100 1000) y (range 100 1000)] (* x y)))))

@@ -1,6 +1,6 @@
 (ns proj-euler.problems.prob-051-060
   (:require [clojure.math.numeric-tower :refer [expt]]
-            [proj-euler.helper :refer [prime? factorial]]))
+            [proj-euler.helper :refer [prime? factorial digits-of digits->bigint palindrome?]]))
 
 (defn choose [n r]
   (/ (factorial n) (* (factorial r) (factorial (- n r)))))
@@ -11,6 +11,24 @@
                :let [c (choose n r)]
                :when (> c 1000000)]
            c)))
+
+(defn lychrel-trans [n]
+  (+ n (digits->bigint (reverse (digits-of n)))))
+
+(defn lychrel-step [n]
+  (loop [i n
+         ct 1]
+    (if (< ct 50)
+      (let [nxt (lychrel-trans i)]
+        (if (palindrome? nxt)
+          [nxt ct]
+          (recur nxt (inc ct)))))))
+
+(defn lychrel? [n] (not (seq (lychrel-step n))))
+
+(defn p055
+  ([] (p055 10000))
+  ([n] (count (remove #(lychrel-step %) (range 1 n)))))
 
 (defn p058
   ([] (p058 0.1))

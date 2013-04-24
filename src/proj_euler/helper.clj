@@ -46,6 +46,15 @@
   "concat a sequence of digits to constract an integer."
   [ds] (Integer/parseInt (apply str ds)))
 
+(defn digits->bigint
+  "concat a sequence of digits to constract an integer."
+  [ds] (bigint (apply str ds)))
+
+(defn palindrome?
+  "whether integer n is palindrome."
+  [n]
+  (let [s (seq (str n))] (= s (reverse s))))
+
 (defn factorial [n] (reduce * (range 1N (inc n))))
 
 (defn proper-divisors

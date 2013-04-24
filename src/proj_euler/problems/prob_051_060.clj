@@ -1,6 +1,16 @@
 (ns proj-euler.problems.prob-051-060
   (:require [clojure.math.numeric-tower :refer [expt]]
-            [proj-euler.helper :refer [prime?]]))
+            [proj-euler.helper :refer [prime? factorial]]))
+
+(defn choose [n r]
+  (/ (factorial n) (* (factorial r) (factorial (- n r)))))
+
+(defn p053 []
+  (count (for [n (range 1 101)
+               r (range 1 (inc n))
+               :let [c (choose n r)]
+               :when (> c 1000000)]
+           c)))
 
 (defn p058
   ([] (p058 0.1))

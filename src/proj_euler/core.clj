@@ -161,6 +161,16 @@
   ([] (p020 100))
   ([n] (reduce + (digits-of (factorial n)))))
 
+(defn proper-divisors [n] (conj (factors-of n) 1))
+(defn amicable? [n]
+  (let [pdsum (fn [i] (reduce + (proper-divisors i)))
+        pair (pdsum n)]
+    (if (not= n pair)
+      (= n (pdsum pair)))))
+(defn p021
+  ([] (p021 10000))
+  ([n] (reduce + (filter amicable? (range n)))))
+
 (defn rotates
   [ds]
   (let [c (count ds)]

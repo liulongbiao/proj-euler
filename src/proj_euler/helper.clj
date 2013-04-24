@@ -72,3 +72,12 @@
 (defn abundant?
   "A number n is called abundant if the sum of its proper divisors exceeds n"
   [n] (> (sum (proper-divisors n)) n))
+
+(defn permuted-integers
+  "permutations of digits in n to produce integers. (remove those starts with 0)"
+  [n]
+  (->> n
+    digits-of
+    permutations
+    (remove #(zero? (first %)))
+    (map digits->int)))

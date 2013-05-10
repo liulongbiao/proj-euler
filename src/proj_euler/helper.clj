@@ -90,3 +90,12 @@
     permutations
     (remove #(zero? (first %)))
     (map digits->int)))
+
+(defn cube
+  "cube of number n."
+  [n] (* n n n))
+
+(defn cube?
+  "wether number n is cube of another number."
+  [n]
+  (= n (cube (bigint (+ 0.001M (expt (double n) (/ 1 3)))))))
